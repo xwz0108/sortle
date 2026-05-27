@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
-import { Container, Grid, Typography, Box, Paper, Button, Alert, LinearProgress } from '@mui/material';
-import { useParams, useNavigate } from 'react-router-dom';
+import { Container, Grid, Typography, Box, Paper, Button, LinearProgress } from '@mui/material';
+import { useParams } from 'react-router-dom';
 import useGameStore from '../../store/gameStore';
 import LifeBar from './LifeBar';
 import WordCard from './WordCard';
@@ -9,7 +9,6 @@ import ShareModal from './ShareModal';
 
 const GameBoard: React.FC = () => {
   const { date } = useParams<{ date?: string }>();
-  const navigate = useNavigate();
   
   const {
     puzzle,
@@ -19,7 +18,6 @@ const GameBoard: React.FC = () => {
     categories,
     words,
     gameStatus,
-    startTime,
     loadPuzzle,
     selectWord,
     deselectWord,
