@@ -1,6 +1,6 @@
 import React from 'react';
-import { Paper, Typography, Box } from '@mui/material';
-import { useDrag, useDrop } from 'react-dnd';
+import { Paper, Typography } from '@mui/material';
+import { useDrag } from 'react-dnd';
 import { ItemTypes } from '../../utils/dndUtils';
 
 interface WordCardProps {
