@@ -60,12 +60,6 @@ const themeOptions: ThemeOptions = {
           fontSize: '1rem',
           padding: '10px 24px',
         },
-        containedPrimary: {
-          background: 'linear-gradient(45deg, #E91E63 30%, #9C27B0 90%)',
-          '&:hover': {
-            background: 'linear-gradient(45deg, #C2185B 30%, #7B1FA2 90%)',
-          },
-        },
       },
     },
     MuiCard: {
