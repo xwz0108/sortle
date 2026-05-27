@@ -244,4 +244,4 @@ export const useGameStore = create<GameStore>()((set, get) => ({
   stopTimer: () => {
     set({ endTime: Date.now() });
   },
-});
+}));
