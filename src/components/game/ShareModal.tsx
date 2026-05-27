@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Typography, Box, TextField } from '@mui/material';
-import { useGameStore } from '../../store/gameStore';
+import useGameStore from '../../store/gameStore';
 
 interface ShareModalProps {
   open: boolean;
