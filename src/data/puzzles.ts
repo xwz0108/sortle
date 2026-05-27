@@ -1,7 +1,7 @@
-import type { Puzzle } from '../types';
+import type { RawPuzzle } from '../types';
 
 // ===== Helper: pick puzzle by date (deterministic) =====
-function pickPuzzle(dateStr: string): Puzzle {
+function pickPuzzle(dateStr: string): RawPuzzle {
   const puzzles = allPuzzles;
   // Simple deterministic hash from date string
   let hash = 0;
@@ -14,13 +14,13 @@ function pickPuzzle(dateStr: string): Puzzle {
   return puzzles[index]!;
 }
 
-export function getPuzzleByDate(date?: string): Puzzle {
+export function getPuzzleByDate(date?: string): RawPuzzle {
   const dateStr = date || new Date().toISOString().split('T')[0]!;
   return pickPuzzle(dateStr);
 }
 
 // ===== All Puzzles =====
-const allPuzzles: Puzzle[] = [
+const allPuzzles: RawPuzzle[] = [
   // ===== Puzzle 1 =====
   {
     date: '2026-06-01',
@@ -73,6 +73,7 @@ const allPuzzles: Puzzle[] = [
       { id: 'w1-15', text: 'PLANET', categoryId: 'cat-1-4' },
       { id: 'w1-16', text: 'PANCAKE', categoryId: 'cat-1-4' },
     ],
+    redHerrings: [],
     hints: [
       'One group is full of carbs',
       'Something musical starts with P',
@@ -131,6 +132,7 @@ const allPuzzles: Puzzle[] = [
       { id: 'w2-15', text: 'KITE', categoryId: 'cat-2-4' },
       { id: 'w2-16', text: 'ROCKET', categoryId: 'cat-2-4' },
     ],
+    redHerrings: [],
     hints: [
       'One group has four legs',
       'You can find these in a classroom',
@@ -189,6 +191,7 @@ const allPuzzles: Puzzle[] = [
       { id: 'w3-15', text: 'SATURN', categoryId: 'cat-3-4' },
       { id: 'w3-16', text: 'NEPTUNE', categoryId: 'cat-3-4' },
     ],
+    redHerrings: [],
     hints: [
       'One group crawls slowly',
       'One group is out of this world',
