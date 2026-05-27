@@ -7,6 +7,12 @@ export interface Word {
   locked: boolean;
 }
 
+export interface RawWord {
+  id: string;
+  text: string;
+  categoryId: string;
+}
+
 export interface Category {
   id: string;
   name: string;
@@ -14,6 +20,14 @@ export interface Category {
   description: string;
   words: string[]; // word IDs
   solved: boolean;
+}
+
+export interface RawCategory {
+  id: string;
+  name: string;
+  color: string;
+  description: string;
+  words: string[];
 }
 
 export interface Puzzle {
@@ -25,8 +39,17 @@ export interface Puzzle {
   hints: string[];
 }
 
+export interface RawPuzzle {
+  date: string;
+  difficulty: 'easy' | 'medium' | 'hard';
+  categories: RawCategory[];
+  words: RawWord[];
+  redHerrings: string[];
+  hints: string[];
+}
+
 export interface GameState {
-  puzzle: Puzzle | null;
+  puzzle: RawPuzzle | null;
   lives: number;
   maxLives: number;
   selectedWords: string[]; // word IDs
