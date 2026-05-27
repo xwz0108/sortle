@@ -43,7 +43,7 @@ const Home: React.FC = () => {
           <Typography variant="h6" sx={{ mb: 2 }}>
             How to Play
           </Typography>
-          <Stack spacing={2} alignItems="flex-start">
+          <Stack spacing={2} sx={{ alignItems: 'flex-start' }}>
             <Typography variant="body1" align="left">
               1. You'll see 16 words on the board
             </Typography>
