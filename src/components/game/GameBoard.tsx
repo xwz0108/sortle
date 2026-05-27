@@ -3,9 +3,9 @@ import { Container, Grid, Typography, Box, Paper, Button, LinearProgress, Chip, 
 import { useParams } from 'react-router-dom';
 import {
   DndContext,
-  DragEndEvent,
+  type DragEndEvent,
   DragOverlay,
-  DragStartEvent,
+  type DragStartEvent,
   PointerSensor,
   KeyboardSensor,
   useSensor,
@@ -168,7 +168,7 @@ const GameBoard: React.FC = () => {
           <Typography variant="h3" sx={{ mb: 2, color: 'success.main', fontWeight: 700 }}>
             🎉 You Won!
           </Typography>
-          <Stack direction="row" spacing={2} justifyContent="center" sx={{ mb: 3 }}>
+          <Stack direction="row" spacing={2} sx={{ justifyContent: 'center', mb: 3 }}>
             <Chip label={`⏱ ${displayTime}`} color="primary" />
             <Chip label={`❌ Mistakes: ${mistakes}`} color="secondary" />
             <Chip label={`🏆 Score: ${score}`} color="success" />
@@ -219,11 +219,11 @@ const GameBoard: React.FC = () => {
     >
       <Container maxWidth="md" sx={{ py: 2 }}>
         {/* Header */}
-        <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 2 }}>
-          <Typography variant="h6" fontWeight={700}>
+        <Stack direction="row" sx={{ justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+          <Typography variant="h6" sx={{ fontWeight: 700 }}>
             Sortle
           </Typography>
-          <Stack direction="row" spacing={2} alignItems="center">
+          <Stack direction="row" spacing={2} sx={{ alignItems: 'center' }}>
             <Chip label={`⏱ ${displayTime}`} size="small" />
             <LifeBar lives={lives} maxLives={maxLives} />
           </Stack>
@@ -244,7 +244,7 @@ const GameBoard: React.FC = () => {
         {/* Category Zones */}
         <Grid container spacing={2} sx={{ mb: 3 }}>
           {categories.map(category => (
-            <Grid item xs={12} sm={6} key={category.id}>
+            <Grid size={{ xs: 12, sm: 6 }} key={category.id}>
               <CategoryZone
                 category={category}
                 placedWords={category.words}
@@ -261,9 +261,9 @@ const GameBoard: React.FC = () => {
           <Typography variant="h6" sx={{ mb: 2, textAlign: 'center' }}>
             Select 4 words that belong together
           </Typography>
-          <Grid container spacing={1} justifyContent="center">
+          <Grid container spacing={1} sx={{ justifyContent: 'center' }}>
             {words.filter(w => !w.placed).map(word => (
-              <Grid item key={word.id}>
+              <Grid key={word.id}>
                 <WordCard
                   word={word}
                   onClick={handleWordClick}
