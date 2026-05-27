@@ -1,44 +1,53 @@
 import React from 'react';
+import { useDroppable } from '@dnd-kit/core';
 import { Paper, Typography, Chip, Grid } from '@mui/material';
-import { useDrop } from 'react-dnd';
-import { ItemTypes } from '../../utils/dndUtils';
-import type { Category } from '../../types';
+import type { Category, Word } from '../../types';
 
 interface CategoryZoneProps {
   category: Category;
   placedWords: string[]; // word IDs
-  wordTexts: { [key: string]: string }; // wordId -> text
-  onDrop: (categoryId: string) => void;
+  wordMap: Record<string, Word>; // wordId -> Word
+  onDrop: (wordId: string, categoryId: string) => void;
   onRemoveWord: (wordId: string) => void;
 }
 
 const CategoryZone: React.FC<CategoryZoneProps> = ({
   category,
   placedWords,
-  wordTexts,
+  wordMap,
   onDrop,
   onRemoveWord,
 }) => {
-  const [{ isOver }, dropRef] = useDrop({
-    accept: ItemTypes.WORD,
-    drop: () => onDrop(category.id),
-    collect: (monitor) => ({
-      isOver: monitor.isOver(),
-    }),
+  const { setNodeRef, isOver, active } = useDroppable({
+    id: `zone-${category.id}`,
+    data: { categoryId: category.id, type: 'CATEGORY_ZONE' },
+    disabled: category.solved,
   });
+
+  const borderColor = category.solved
+    ? category.color
+    : isOver
+      ? 'primary.main'
+      : 'divider';
+
+  const bgColor = category.solved
+    ? category.color
+    : isOver
+      ? 'action.hover'
+      : 'background.paper';
 
   return (
     <Paper
-      ref={category.solved ? undefined : dropRef}
+      ref={category.solved ? undefined : setNodeRef}
       elevation={category.solved ? 0 : isOver ? 4 : 1}
       sx={{
         p: 2,
         minHeight: 100,
-        backgroundColor: category.solved ? category.color : isOver ? 'action.hover' : 'background.paper',
+        backgroundColor: bgColor,
         color: category.solved ? 'white' : 'text.primary',
         borderRadius: 3,
         border: 2,
-        borderColor: category.solved ? category.color : isOver ? 'primary.main' : 'divider',
+        borderColor,
         opacity: category.solved ? 0.9 : 1,
         transition: 'all 0.2s',
       }}
@@ -55,7 +64,7 @@ const CategoryZone: React.FC<CategoryZoneProps> = ({
         {placedWords.map((wordId) => (
           <Grid item key={wordId}>
             <Chip
-              label={wordTexts[wordId]}
+              label={wordMap[wordId]?.text || wordId}
               onDelete={() => !category.solved && onRemoveWord(wordId)}
               sx={{
                 backgroundColor: category.solved ? 'rgba(255,255,255,0.3)' : 'grey.100',
