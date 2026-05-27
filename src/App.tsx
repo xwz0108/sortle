@@ -7,6 +7,7 @@ import Home from './pages/Home';
 import Archive from './pages/Archive';
 import Stats from './pages/Stats';
 import Settings from './pages/Settings';
+import Puzzle from './pages/Puzzle';
 
 const App: React.FC = () => {
   return (
@@ -19,6 +20,7 @@ const App: React.FC = () => {
             <Route path="/archive" element={<Archive />} />
             <Route path="/stats" element={<Stats />} />
             <Route path="/settings" element={<Settings />} />
+            <Route path="/puzzle/:date?" element={<Puzzle />} />
           </Routes>
         </Layout>
       </Router>
