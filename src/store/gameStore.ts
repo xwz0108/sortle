@@ -6,6 +6,7 @@ interface GameStore extends GameState {
   selectWord: (wordId: string) => void;
   deselectWord: (wordId: string) => void;
   placeSelectedWords: (categoryId: string) => boolean;
+  placeWord: (wordId: string, categoryId: string) => void;
   removeWordFromCategory: (wordId: string, categoryId: string) => void;
   submitCategory: (categoryId: string) => boolean;
   useHint: () => string | null;
@@ -231,6 +232,27 @@ const useGameStore = create<GameStore>()((set, get) => ({
 
   stopTimer: () => {
     set({ endTime: Date.now() });
+  },
+
+  // Place single word into category (drag-and-drop)
+  placeWord: (wordId: string, categoryId: string) => {
+    const { words, categories, selectedWords } = get();
+    const word = words.find(w => w.id === wordId);
+    if (!word || word.placed || word.locked) return;
+
+    const updatedWords = words.map(w =>
+      w.id === wordId ? { ...w, selected: false, placed: true } : w
+    );
+
+    const updatedCategories = categories.map(c =>
+      c.id === categoryId ? { ...c, words: [...c.words, wordId] } : c
+    );
+
+    set({
+      words: updatedWords,
+      categories: updatedCategories,
+      selectedWords: selectedWords.filter(id => id !== wordId),
+    });
   },
 }));
 
