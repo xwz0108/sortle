@@ -1,5 +1,5 @@
 import React from 'react';
-import { Paper, Typography, Box, Chip, Grid } from '@mui/material';
+import { Paper, Typography, Chip, Grid } from '@mui/material';
 import { useDrop } from 'react-dnd';
 import { ItemTypes } from '../../utils/dndUtils';
 import type { Category } from '../../types';
@@ -14,7 +14,8 @@ interface CategoryZoneProps {
 
 const CategoryZone: React.FC<CategoryZoneProps> = ({
   category,
-  placedWords: wordTexts,
+  placedWords,
+  wordTexts,
   onDrop,
   onRemoveWord,
 }) => {
