@@ -18,7 +18,7 @@ const CategoryZone: React.FC<CategoryZoneProps> = ({
   onDrop,
   onRemoveWord,
 }) => {
-  const { setNodeRef, isOver, active } = useDroppable({
+  const { setNodeRef, isOver } = useDroppable({
     id: `zone-${category.id}`,
     data: { categoryId: category.id, type: 'CATEGORY_ZONE' },
     disabled: category.solved,
@@ -62,7 +62,7 @@ const CategoryZone: React.FC<CategoryZoneProps> = ({
       {/* Placed Words */}
       <Grid container spacing={1}>
         {placedWords.map((wordId) => (
-          <Grid item key={wordId}>
+          <Grid key={wordId}>
             <Chip
               label={wordMap[wordId]?.text || wordId}
               onDelete={() => !category.solved && onRemoveWord(wordId)}
