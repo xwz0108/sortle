@@ -1,8 +1,9 @@
 import React from 'react';
-import { Container, Typography, Alert, LinearProgress } from '@mui/material';
+import { Container, Typography, LinearProgress } from '@mui/material';
 import { useParams } from 'react-router-dom';
 import GameProvider from '../components/game/GameProvider';
 import useGameStore from '../store/gameStore';
+import { getPuzzleByDate } from '../data/puzzles';
 
 const Puzzle: React.FC = () => {
   const { date } = useParams<{ date?: string }>();
@@ -10,17 +11,8 @@ const Puzzle: React.FC = () => {
 
   // Load puzzle on mount
   React.useEffect(() => {
-    const puzzleDate = date || 'today';
-    
-    // For now, always load the sample puzzle
-    // TODO: Implement date-based loading from /data/puzzles/{date}.json
-    fetch('/data/puzzles/2026-06-01.json')
-      .then(res => {
-        if (!res.ok) throw new Error('Puzzle not found');
-        return res.json();
-      })
-      .then(data => loadPuzzle(data))
-      .catch(err => console.error('Failed to load puzzle:', err));
+    const puzzleData = getPuzzleByDate(date);
+    loadPuzzle(puzzleData);
   }, [date, loadPuzzle]);
 
   // Loading state
@@ -46,11 +38,11 @@ const Puzzle: React.FC = () => {
     <Container maxWidth="md" sx={{ py: 2 }}>
       {/* Date display */}
       <Typography variant="h6" sx={{ mb: 2, textAlign: 'center', fontWeight: 600 }}>
-        {new Date(puzzle.date).toLocaleDateString('en-US', { 
-          weekday: 'long', 
-          year: 'numeric', 
-          month: 'long', 
-          day: 'numeric' 
+        {new Date(puzzle.date).toLocaleDateString('en-US', {
+          weekday: 'long',
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
         })}
       </Typography>
 
