@@ -1,15 +1,14 @@
 import React from 'react';
-import { DndProvider } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
-// import useGameStore from '../../store/gameStore';
 import GameBoard from './GameBoard';
 
+/**
+ * GameProvider — thin wrapper (no longer needs react-dnd DndProvider
+ * because GameBoard uses @dnd-kit internally).
+ *
+ * Kept as a named component so existing imports in Puzzle.tsx keep working.
+ */
 const GameProvider: React.FC = () => {
-  return (
-    <DndProvider backend={HTML5Backend}>
-      <GameBoard />
-    </DndProvider>
-  );
+  return <GameBoard />;
 };
 
 export default GameProvider;
