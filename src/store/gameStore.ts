@@ -15,7 +15,7 @@ interface GameStore extends GameState {
   stopTimer: () => void;
 }
 
-export const useGameStore = create<GameStore>((set, get) => ({
+export const useGameStore = create<GameStore>()((set, get) => ({
   // Initial state
   puzzle: null,
   lives: 4,
