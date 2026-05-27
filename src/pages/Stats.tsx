@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Typography, Paper, Box, Grid, LinearProgress, Chip } from '@mui/material';
+import { Container, Typography, Paper, Grid } from '@mui/material';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 const Stats: React.FC = () => {
@@ -28,25 +28,25 @@ const Stats: React.FC = () => {
 
       <Grid container spacing={3}>
         {/* Stats Cards */}
-        <Grid item xs={6} md={3}>
+        <Grid size={{ xs: 6, md: 3 }}>
           <Paper elevation={0} sx={{ p: 2, textAlign: 'center', borderRadius: 4 }}>
             <Typography variant="h3" color="primary">{stats.gamesPlayed}</Typography>
             <Typography variant="body2" color="text.secondary">Played</Typography>
           </Paper>
         </Grid>
-        <Grid item xs={6} md={3}>
+        <Grid size={{ xs: 6, md: 3 }}>
           <Paper elevation={0} sx={{ p: 2, textAlign: 'center', borderRadius: 4 }}>
             <Typography variant="h3" color="primary">{stats.winRate}%</Typography>
             <Typography variant="body2" color="text.secondary">Win Rate</Typography>
           </Paper>
         </Grid>
-        <Grid item xs={6} md={3}>
+        <Grid size={{ xs: 6, md: 3 }}>
           <Paper elevation={0} sx={{ p: 2, textAlign: 'center', borderRadius: 4 }}>
             <Typography variant="h3" color="primary">{stats.currentStreak}</Typography>
             <Typography variant="body2" color="text.secondary">Current Streak</Typography>
           </Paper>
         </Grid>
-        <Grid item xs={6} md={3}>
+        <Grid size={{ xs: 6, md: 3 }}>
           <Paper elevation={0} sx={{ p: 2, textAlign: 'center', borderRadius: 4 }}>
             <Typography variant="h3" color="primary">{stats.maxStreak}</Typography>
             <Typography variant="body2" color="text.secondary">Max Streak</Typography>
@@ -54,7 +54,7 @@ const Stats: React.FC = () => {
         </Grid>
 
         {/* Guess Distribution Chart */}
-        <Grid item xs={12}>
+        <Grid size={{ xs: 12 }}>
           <Paper elevation={0} sx={{ p: 3, borderRadius: 4 }}>
             <Typography variant="h6" sx={{ mb: 2 }}>Guess Distribution</Typography>
             <ResponsiveContainer width="100%" height={300}>
