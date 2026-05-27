@@ -9,7 +9,7 @@ import ShareModal from './ShareModal';
 
 const GameBoard: React.FC = () => {
   const { date } = useParams<{ date?: string }>();
-  
+
   const {
     puzzle,
     lives,
@@ -28,13 +28,11 @@ const GameBoard: React.FC = () => {
 
   // Load puzzle on mount or date change
   useEffect(() => {
-    // TODO: Load puzzle by date from /data/puzzles/{date}.json
-    // For now, load sample puzzle
+    // Puzzle is loaded by Puzzle.tsx; this is a fallback
     if (!puzzle) {
-      fetch('/data/puzzles/2026-06-01.json')
-        .then(res => res.json())
-        .then(data => loadPuzzle(data))
-        .catch(err => console.error('Failed to load puzzle:', err));
+      import('../../data/puzzles').then(({ getPuzzleByDate }) => {
+        loadPuzzle(getPuzzleByDate(date));
+      });
     }
   }, [date, puzzle, loadPuzzle]);
 
@@ -49,147 +47,131 @@ const GameBoard: React.FC = () => {
 
   // Handle submit category
   const handleSubmitCategory = (categoryId: string) => {
-    const result = submitCategory(categoryId);
-    // Could show feedback toast here
-    console.log('Category submit result:', result);
+    submitCategory(categoryId);
   };
 
-  // Handle share
-  const [shareOpen, setShareOpen] = React.useState(false);
-  
-  const handleShare = () => {
-    setShareOpen(true);
+  // Handle drag-and-drop (from CategoryZone back to word pool)
+  const handleRemoveFromCategory = (wordId: string, categoryId: string) => {
+    // Not implemented in current store - could be added
+    console.log('Remove', wordId, 'from', categoryId);
   };
 
-  const handlePlayAgain = () => {
-    resetGame();
-    // Reload same puzzle or next puzzle
-    window.location.reload();
-  };
-
-  // Loading state
-  if (!puzzle) {
+  // Game over states
+  if (gameStatus === 'won') {
     return (
-      <Container maxWidth="md" sx={{ textAlign: 'center', py: 8 }}>
-        <Typography variant="h5">Loading puzzle...</Typography>
-        <LinearProgress sx={{ mt: 2 }} />
+      <Container maxWidth="md" sx={{ py: 4, textAlign: 'center' }}>
+        <Typography variant="h3" sx={{ mb: 2, color: 'success.main', fontWeight: 700 }}>
+          You Won!
+        </Typography>
+        <Typography variant="body1" sx={{ mb: 4 }}>
+          Great job solving today&apos;s puzzle!
+        </Typography>
+        <Button variant="contained" onClick={resetGame} sx={{ mr: 2 }}>
+          Play Again
+        </Button>
+        <ShareModal />
       </Container>
     );
   }
 
-  // Game over state (won or lost)
-  if (gameStatus === 'won' || gameStatus === 'lost') {
+  if (gameStatus === 'lost') {
     return (
-      <Container maxWidth="md" sx={{ py: 4 }}>
-        <Paper elevation={0} sx={{ p: 4, textAlign: 'center', borderRadius: 4 }}>
-          <Typography variant="h4" sx={{ mb: 2, fontWeight: 700 }}>
-            {gameStatus === 'won' ? '🎉 You Won!' : '😢 Game Over'}
-          </Typography>
-          
-          <Typography variant="body1" sx={{ mb: 3 }}>
-            {gameStatus === 'won' 
-              ? `You grouped all words with ${maxLives - lives} mistake(s)!`
-              : 'Better luck next time!'}
-          </Typography>
+      <Container maxWidth="md" sx={{ py: 4, textAlign: 'center' }}>
+        <Typography variant="h3" sx={{ mb: 2, color: 'error.main', fontWeight: 700 }}>
+          Game Over
+        </Typography>
+        <Typography variant="body1" sx={{ mb: 4 }}>
+          You ran out of lives. Better luck next time!
+        </Typography>
+        <Button variant="contained" onClick={resetGame}>
+          Try Again
+        </Button>
+      </Container>
+    );
+  }
 
-          {/* Show solutions */}
-          <Box sx={{ mb: 3 }}>
-            {categories.map(category => (
-              <Box key={category.id} sx={{ mb: 2, p: 2, backgroundColor: category.color, borderRadius: 2 }}>
-                <Typography variant="h6" sx={{ color: 'white', fontWeight: 700 }}>
-                  {category.name}
-                </Typography>
-                <Typography variant="body2" sx={{ color: 'white' }}>
-                  {category.description}
-                </Typography>
-              </Box>
-            ))}
-          </Box>
-
-          <Button variant="contained" onClick={handlePlayAgain} sx={{ mr: 2 }}>
-            Play Again
-          </Button>
-          <Button variant="outlined" onClick={handleShare}>
-            Share Results
-          </Button>
-        </Paper>
-
-        <ShareModal open={shareOpen} onClose={() => setShareOpen(false)} />
+  if (!puzzle) {
+    return (
+      <Container maxWidth="md" sx={{ py: 8, textAlign: 'center' }}>
+        <LinearProgress />
+        <Typography sx={{ mt: 2 }}>Loading puzzle...</Typography>
       </Container>
     );
   }
 
   return (
     <Container maxWidth="md" sx={{ py: 2 }}>
-      {/* Header: Lives + Stats */}
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-        <LifeBar lives={lives} maxLives={maxLives} />
-        <Button variant="text" onClick={handleShare}>
-          Share
-        </Button>
+      {/* Lives */}
+      <LifeBar lives={lives} maxLives={maxLives} />
+
+      {/* Progress */}
+      <Box sx={{ mb: 3 }}>
+        <Typography variant="body2" sx={{ mb: 1 }}>
+          Progress: {categories.filter(c => c.solved).length} / {categories.length} categories solved
+        </Typography>
+        <LinearProgress
+          variant="determinate"
+          value={(categories.filter(c => c.solved).length / categories.length) * 100}
+          sx={{ height: 8, borderRadius: 4 }}
+        />
       </Box>
 
-      {/* Game Instructions */}
-      <Typography variant="body2" color="text.secondary" sx={{ mb: 2, textAlign: 'center' }}>
-        Group the words into {categories.length} categories
-      </Typography>
-
-      {/* Word Pool (unplaced words) */}
-      <Grid container spacing={1} sx={{ mb: 3 }}>
-        {words
-          .filter(w => !w.placed)
-          .map(word => (
-            <Grid item xs={3} key={word.id}>
-              <WordCard
-                id={word.id}
-                text={word.text}
-                selected={word.selected}
-                placed={word.placed}
-                locked={word.locked}
-                onClick={handleWordClick}
-              />
-            </Grid>
-          ))}
-      </Grid>
-
       {/* Category Zones */}
-      <Grid container spacing={2}>
+      <Grid container spacing={2} sx={{ mb: 3 }}>
         {categories.map(category => (
-          <Grid item xs={12} md={6} key={category.id}>
+          <Grid item xs={12} sm={6} key={category.id}>
             <CategoryZone
               category={category}
               placedWords={category.words}
-              wordTexts={Object.fromEntries(words.map(w => [w.id, w.text]))}
-              onDrop={(catId) => placeSelectedWords(catId)}
-              onRemoveWord={(wordId) => {
-                // TODO: Implement removeWordFromCategory in store
-                console.log('Remove word:', wordId);
-              }}
+              wordTexts={words}
+              onDrop={(wordId: string) => placeSelectedWords(category.id)}
+              onRemoveWord={handleRemoveFromCategory}
             />
-            
-            {/* Submit Button (shown when category has 4 words) */}
-            {category.words.length === 4 && !category.solved && (
-              <Button
-                fullWidth
-                variant="contained"
-                onClick={() => handleSubmitCategory(category.id)}
-                sx={{ mt: 1 }}
-              >
-                Submit
-              </Button>
-            )}
           </Grid>
         ))}
       </Grid>
 
-      {/* Selected Words Counter */}
-      {selectedWords.length > 0 && (
-        <Paper elevation={0} sx={{ p: 2, mt: 3, textAlign: 'center', borderRadius: 2 }}>
-          <Typography variant="body2">
-            {selectedWords.length} word(s) selected. Click a category zone to place them.
-          </Typography>
-        </Paper>
-      )}
+      {/* Word Pool */}
+      <Paper sx={{ p: 3, mb: 3 }}>
+        <Typography variant="h6" sx={{ mb: 2, textAlign: 'center' }}>
+          Select 4 words that belong together
+        </Typography>
+        <Grid container spacing={1} justifyContent="center">
+          {words.map(word => (
+            <Grid item key={word.id}>
+              <WordCard
+                word={word}
+                selected={word.selected}
+                onClick={() => handleWordClick(word.id)}
+              />
+            </Grid>
+          ))}
+        </Grid>
+
+        {/* Selected count */}
+        <Typography variant="body2" sx={{ mt: 2, textAlign: 'center', color: 'text.secondary' }}>
+          {selectedWords.length} / 4 selected
+        </Typography>
+      </Paper>
+
+      {/* Submit buttons */}
+      <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2, mb: 3 }}>
+        {categories.map(category => (
+          <Button
+            key={category.id}
+            variant="contained"
+            disabled={category.solved || selectedWords.length !== 4}
+            onClick={() => handleSubmitCategory(category.id)}
+            sx={{
+              backgroundColor: category.color,
+              '&:hover': { backgroundColor: category.color, opacity: 0.9 },
+              '&:disabled': { backgroundColor: 'grey.300' },
+            }}
+          >
+            Submit {category.name}
+          </Button>
+        ))}
+      </Box>
     </Container>
   );
 };
