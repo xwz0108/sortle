@@ -1,8 +1,8 @@
 import { create } from 'zustand';
-import type { Puzzle, GameState, Word, Category } from '../types';
+import type { RawPuzzle, GameState } from '../types';
 
 interface GameStore extends GameState {
-  loadPuzzle: (puzzle: Puzzle) => void;
+  loadPuzzle: (puzzle: RawPuzzle) => void;
   selectWord: (wordId: string) => void;
   deselectWord: (wordId: string) => void;
   placeSelectedWords: (categoryId: string) => boolean;
@@ -31,7 +31,7 @@ const useGameStore = create<GameStore>()((set, get) => ({
   maxHints: 2,
 
   // Load puzzle
-  loadPuzzle: (puzzle: Puzzle) => {
+  loadPuzzle: (puzzle: RawPuzzle) => {
     const words = puzzle.words.map(w => ({
       ...w,
       selected: false,
