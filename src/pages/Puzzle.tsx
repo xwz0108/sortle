@@ -6,7 +6,6 @@ import useGameStore from '../store/gameStore';
 
 const Puzzle: React.FC = () => {
   const { date } = useParams<{ date?: string }>();
-  const navigate = useNavigate();
   const { loadPuzzle, puzzle, gameStatus } = useGameStore();
 
   // Load puzzle on mount
