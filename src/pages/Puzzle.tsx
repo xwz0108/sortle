@@ -1,8 +1,8 @@
 import React from 'react';
 import { Container, Typography, Alert, LinearProgress } from '@mui/material';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import GameProvider from '../components/game/GameProvider';
-import { useGameStore } from '../store/gameStore';
+import useGameStore from '../store/gameStore';
 
 const Puzzle: React.FC = () => {
   const { date } = useParams<{ date?: string }>();
