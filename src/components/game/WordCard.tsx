@@ -66,7 +66,7 @@ const WordCard: React.FC<WordCardProps> = ({ word, onClick, shake }) => {
           onClick={() => !word.placed && !word.locked && onClick(word.id)}
           sx={paperSx}
         >
-          <Typography variant="body1" fontWeight={word.selected ? 700 : 400}>
+          <Typography variant="body1" sx={{ fontWeight: word.selected ? 700 : 400 }}>
             {word.text}
           </Typography>
         </Paper>
