@@ -2,7 +2,7 @@ import React from 'react';
 import { Paper, Typography, Box, Chip, Grid } from '@mui/material';
 import { useDrop } from 'react-dnd';
 import { ItemTypes } from '../../utils/dndUtils';
-import { Category } from '../../types';
+import type { Category } from '../../types';
 
 interface CategoryZoneProps {
   category: Category;
